@@ -1,3 +1,4 @@
+// src/components/Editor.tsx
 import { useEditor } from '../context/EditorContext';
 import { BlockControls } from './blocks/BlockControls';
 import { HeadingBlock } from './blocks/HeadingBlock';
@@ -6,6 +7,9 @@ import { ImageBlock } from './blocks/ImageBlock';
 import { VideoBlock } from './blocks/VideoBlock';
 import { Block } from '../types/editorTypes';
 import { useDragAndDrop } from '../hooks/useDragAndDrop';
+import { DndContext, DragOverlay } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { SortableBlock } from './SortableBlock';
 
 interface BlockComponentProps {
   block: Block;
@@ -14,7 +18,14 @@ interface BlockComponentProps {
 
 export const Editor = () => {
   const { blocks } = useEditor();
-  const { sensors, handleDragStart, handleDragEnd, handleDragOver } = useDragAndDrop();
+  const {
+    sensors,
+    handleDragStart,
+    handleDragEnd,
+    activeId
+  } = useDragAndDrop();
+
+  const activeBlock = activeId ? blocks.find(block => block.id === activeId) : null;
 
   const renderBlock = (block: Block, index: number) => {
     const props: BlockComponentProps = { block, index };
@@ -34,21 +45,36 @@ export const Editor = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-4">
-      {blocks.map((block, index) => (
-        <div 
-          key={block.id} 
-          className="relative group"
-          draggable
-          onDragStart={() => handleDragStart(index)}
-          onDragEnd={handleDragEnd}
-          onDragOver={(e) => handleDragOver(e, index)}
-        >
-          {renderBlock(block, index)}
-          <BlockControls index={index} blockId={block.id} />
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+    >
+      <SortableContext
+        items={blocks.map(block => block.id)}
+        strategy={verticalListSortingStrategy}
+      >
+        <div className="max-w-3xl mx-auto p-4">
+          {blocks.map((block, index) => (
+            <SortableBlock key={block.id} id={block.id}>
+              <div className="relative group">
+                {renderBlock(block, index)}
+                <BlockControls index={index} blockId={block.id} />
+              </div>
+            </SortableBlock>
+          ))}
+          <div className="h-20" /> {/* Spacer at the bottom */}
         </div>
-      ))}
-      <div className="h-20" /> {/* Spacer at the bottom */}
-    </div>
+      </SortableContext>
+
+      <DragOverlay>
+        {activeBlock ? (
+          <div className="opacity-50">
+            {renderBlock(activeBlock, blocks.findIndex(block => block.id === activeId)!)}
+          </div>
+        ) : null}
+      </DragOverlay>
+    </DndContext>
   );
 };
