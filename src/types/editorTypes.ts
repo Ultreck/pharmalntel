@@ -1,4 +1,3 @@
-// src/types/editorTypes.ts
 export interface Block {
   id: string;
   type: BlockType;
@@ -15,4 +14,10 @@ export interface EditorContextType {
   deleteBlock: (id: string) => void;
   activeBlockId: string | null;
   setActiveBlockId: (id: string | null) => void;
+  moveBlock: (dragIndex: number, hoverIndex: number) => void;
+}
+
+export interface BlockComponentProps {
+  block: Block;
+  index: number;
 }
