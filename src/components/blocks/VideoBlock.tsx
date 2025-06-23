@@ -1,24 +1,12 @@
-// src/components/blocks/VideoBlock.jsx
 import { useState } from 'react';
-import { useEditor } from '../../context/EditorContext';
 import ReactPlayer from 'react-player';
+import { useEditor } from '../../context/EditorContext';
+import { BlockComponentProps } from '../../types/editorTypes';
 
-type VideoBlockProps = {
-  block: {
-    id: string;
-    data: {
-      url?: string;
-      caption?: string;
-      [key: string]: any;
-    };
-    [key: string]: any;
-  };
-  index: number;
-};
-
-export const VideoBlock = ({ block, index }: VideoBlockProps) => {
+export const VideoBlock = ({ block, index }: BlockComponentProps) => {
   const { updateBlock, setActiveBlockId } = useEditor();
   const [isEditing, setIsEditing] = useState(false);
+console.log(index);
 
   return (
     <div className="mb-4" onFocus={() => setActiveBlockId(block.id)}>
@@ -30,6 +18,7 @@ export const VideoBlock = ({ block, index }: VideoBlockProps) => {
               width="100%"
               height="100%"
               controls
+              onClick={() => setIsEditing(!isEditing)}
             />
           </div>
           {block.data.caption && (
@@ -37,8 +26,11 @@ export const VideoBlock = ({ block, index }: VideoBlockProps) => {
           )}
         </div>
       ) : (
-        <div className="border-2 border-dashed border-gray-300 rounded p-4 text-center">
-          No video URL provided
+        <div 
+          className="border-2 border-dashed border-gray-300 rounded p-4 text-center cursor-pointer"
+          onClick={() => setIsEditing(true)}
+        >
+          Click to add video
         </div>
       )}
       
@@ -62,6 +54,12 @@ export const VideoBlock = ({ block, index }: VideoBlockProps) => {
             })}
             className="w-full p-2 border rounded"
           />
+          <button
+            onClick={() => setIsEditing(false)}
+            className="mt-2 px-3 py-1 bg-blue-500 text-white rounded"
+          >
+            Done
+          </button>
         </div>
       )}
     </div>
