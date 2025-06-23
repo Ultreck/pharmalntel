@@ -1,4 +1,3 @@
-// src/context/EditorContext.tsx
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { Block, BlockType, EditorContextType } from '../types/editorTypes';
 
@@ -40,6 +39,16 @@ export const EditorProvider = ({ children }: EditorProviderProps) => {
     setBlocks(prev => prev.filter(block => block.id !== id));
   };
 
+  const moveBlock = (dragIndex: number, hoverIndex: number) => {
+    setBlocks(prevBlocks => {
+      const draggedBlock = prevBlocks[dragIndex];
+      const updatedBlocks = [...prevBlocks];
+      updatedBlocks.splice(dragIndex, 1);
+      updatedBlocks.splice(hoverIndex, 0, draggedBlock);
+      return updatedBlocks;
+    });
+  };
+
   return (
     <EditorContext.Provider
       value={{
@@ -48,7 +57,8 @@ export const EditorProvider = ({ children }: EditorProviderProps) => {
         updateBlock,
         deleteBlock,
         activeBlockId,
-        setActiveBlockId
+        setActiveBlockId,
+        moveBlock
       }}
     >
       {children}
