@@ -1,5 +1,12 @@
-import { createContext, useContext, useState, useMemo, ReactNode, useCallback } from 'react';
-import { Block, BlockType, EditorContextType } from '../types/editorTypes';
+import {
+  createContext,
+  useContext,
+  useState,
+  useMemo,
+  ReactNode,
+  useCallback,
+} from "react";
+import { Block, BlockType, EditorContextType } from "../types/editorTypes";
 
 const EditorContext = createContext<EditorContextType | undefined>(undefined);
 
@@ -16,11 +23,11 @@ export const EditorProvider = ({ children }: EditorProviderProps) => {
     const newBlock: Block = {
       id: Date.now().toString(),
       type,
-      content: '',
-      data: {}
+      content: "",
+      data: {},
     };
-    
-    setBlocks(prev => {
+
+    setBlocks((prev) => {
       const updatedBlocks = [...prev];
       updatedBlocks.splice(index + 1, 0, newBlock);
       return updatedBlocks;
@@ -29,19 +36,17 @@ export const EditorProvider = ({ children }: EditorProviderProps) => {
   }, []);
 
   const updateBlock = useCallback((id: string, updates: Partial<Block>) => {
-    setBlocks(prev => 
-      prev.map(block => 
-        block.id === id ? { ...block, ...updates } : block
-      )
+    setBlocks((prev) =>
+      prev.map((block) => (block.id === id ? { ...block, ...updates } : block))
     );
   }, []);
 
   const deleteBlock = useCallback((id: string) => {
-    setBlocks(prev => prev.filter(block => block.id !== id));
+    setBlocks((prev) => prev.filter((block) => block.id !== id));
   }, []);
 
   const moveBlock = useCallback((dragIndex: number, hoverIndex: number) => {
-    setBlocks(prevBlocks => {
+    setBlocks((prevBlocks) => {
       const draggedBlock = prevBlocks[dragIndex];
       const updatedBlocks = [...prevBlocks];
       updatedBlocks.splice(dragIndex, 1);
@@ -51,15 +56,18 @@ export const EditorProvider = ({ children }: EditorProviderProps) => {
   }, []);
 
   // Memoize the context value to prevent unnecessary re-renders
-  const contextValue = useMemo(() => ({
-    blocks,
-    addBlock,
-    updateBlock,
-    deleteBlock,
-    activeBlockId,
-    setActiveBlockId,
-    moveBlock
-  }), [blocks, activeBlockId, addBlock, updateBlock, deleteBlock, moveBlock]);
+  const contextValue = useMemo(
+    () => ({
+      blocks,
+      addBlock,
+      updateBlock,
+      deleteBlock,
+      activeBlockId,
+      setActiveBlockId,
+      moveBlock,
+    }),
+    [blocks, activeBlockId, addBlock, updateBlock, deleteBlock, moveBlock]
+  );
 
   return (
     <EditorContext.Provider value={contextValue}>
@@ -72,16 +80,18 @@ export const EditorProvider = ({ children }: EditorProviderProps) => {
 export const useEditor = (): EditorContextType => {
   const context = useContext(EditorContext);
   if (context === undefined) {
-    throw new Error('useEditor must be used within an EditorProvider');
+    throw new Error("useEditor must be used within an EditorProvider");
   }
   return context;
 };
 
 // Optimized selector hook
-export const useEditorSelector = <T,>(selector: (context: EditorContextType) => T): T => {
+export const useEditorSelector = <T,>(
+  selector: (context: EditorContextType) => T
+): T => {
   const context = useContext(EditorContext);
   if (context === undefined) {
-    throw new Error('useEditorSelector must be used within an EditorProvider');
+    throw new Error("useEditorSelector must be used within an EditorProvider");
   }
   return selector(context);
 };

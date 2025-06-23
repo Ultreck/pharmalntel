@@ -7,11 +7,14 @@ export const VideoBlock = memo(({ block }: BlockComponentProps) => {
   //   const { updateBlock, setActiveBlockId } = useEditor();
   const updateBlock = useEditorSelector((state) => state.updateBlock);
   const setActiveBlockId = useEditorSelector((state) => state.setActiveBlockId);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(true);
 
   //   const handleSetIsEditing = useCallback(() => {
   //     setIsEditing(true);
   //   }, []);
+  console.log(block);
+  
+
   console.log(isEditing);
 
   const toggleEditing = useCallback(() => {
@@ -24,18 +27,22 @@ export const VideoBlock = memo(({ block }: BlockComponentProps) => {
 
   const handleUpdateUrl = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      updateBlock(block.id, {
-        data: { ...block.data, url: e.target.value },
-      });
+      if (e.target.value) {
+        updateBlock(block.id, {
+          data: { ...block.data, url: e.target.value },
+        });
+      }
     },
     [block.id, block.data, updateBlock]
   );
 
   const handleUpdateCaption = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      updateBlock(block.id, {
-        data: { ...block.data, caption: e.target.value },
-      });
+      if (e.target.value) {
+        updateBlock(block.id, {
+          data: { ...block.data, caption: e.target.value },
+        });
+      }
     },
     [block.id, block.data, updateBlock]
   );
@@ -45,7 +52,9 @@ export const VideoBlock = memo(({ block }: BlockComponentProps) => {
   }, [block.id, setActiveBlockId]);
 
   return (
-    <div className="mb-4" onFocus={handleFocus}>
+    <div className="mb-4" 
+    onFocus={handleFocus}
+    >
       {block.data.url ? (
         <div>
           <div className="aspect-video bg-black">
@@ -66,7 +75,7 @@ export const VideoBlock = memo(({ block }: BlockComponentProps) => {
           className="border-2 border-dashed border-gray-300 rounded p-4 text-center cursor-pointer"
           onClick={() => {
             setIsEditing(true);
-            console.log(isEditing);
+            console.log("Clicked to add video");
           }}
         >
           Click to add video
@@ -78,14 +87,14 @@ export const VideoBlock = memo(({ block }: BlockComponentProps) => {
           <input
             type="text"
             placeholder="YouTube URL"
-            value={block.data.url || ""}
+            value={block?.data?.url || ""}
             onChange={handleUpdateUrl}
             className="w-full p-2 border rounded mb-2"
           />
           <input
             type="text"
             placeholder="Caption (optional)"
-            value={block.data.caption || ""}
+            value={block?.data?.caption || ""}
             onChange={handleUpdateCaption}
             className="w-full p-2 border rounded"
           />
