@@ -1,6 +1,5 @@
-// src/components/Toolbar.jsx
 import { useEditor } from '../context/EditorContext';
-import { BLOCK_TYPES } from '../lib/blockTypes';
+import { BLOCK_TYPES } from '../lib/constants';
 
 export const Toolbar = () => {
   const { addBlock, blocks } = useEditor();
