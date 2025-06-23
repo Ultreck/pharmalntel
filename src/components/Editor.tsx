@@ -9,7 +9,7 @@ import { Block } from '../types/editorTypes';
 import { useDragAndDrop } from '../hooks/useDragAndDrop';
 import { DndContext, DragOverlay } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { SortableBlock } from './SortableBlock';
+import { SortableBlock } from './blocks/SortableBlock';
 
 interface BlockComponentProps {
   block: Block;
@@ -22,10 +22,10 @@ export const Editor = () => {
     sensors,
     handleDragStart,
     handleDragEnd,
-    activeId
+    activeId,
+    activeBlock,
+    closestCenter,
   } = useDragAndDrop();
-
-  const activeBlock = activeId ? blocks.find(block => block.id === activeId) : null;
 
   const renderBlock = (block: Block, index: number) => {
     const props: BlockComponentProps = { block, index };

@@ -1,3 +1,9 @@
+// src/types/editorTypes.ts
+import { UniqueIdentifier } from '@dnd-kit/core';
+
+// Add this to your existing types
+export type BlockId = string; // Ensure all block IDs are strings
+
 export interface Block {
   id: string;
   type: BlockType;

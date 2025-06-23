@@ -1,23 +1,34 @@
 // src/hooks/useDragAndDrop.ts
 import { useState } from 'react';
 import { useEditor } from '../context/EditorContext';
-import { DndContext, DragOverlay, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import {
+  DndContext,
+  DragOverlay,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragStartEvent,
+  DragEndEvent,
+  UniqueIdentifier
+} from '@dnd-kit/core';
+import { arrayMove } from '@dnd-kit/sortable';
 
 export const useDragAndDrop = () => {
   const { blocks, moveBlock } = useEditor();
-  const [activeId, setActiveId] = useState<string | null>(null);
+  const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor)
   );
 
-  const handleDragStart = (event: { active: { id: string } }) => {
+  const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id);
   };
 
-  const handleDragEnd = (event: { active: { id: string }; over: { id: string } | null }) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     
     if (over && active.id !== over.id) {
@@ -33,7 +44,8 @@ export const useDragAndDrop = () => {
     sensors,
     handleDragStart,
     handleDragEnd,
+    closestCenter,
     activeId,
-    blocks
+    activeBlock: activeId ? blocks.find(block => block.id === activeId) : null
   };
 };
