@@ -3,6 +3,8 @@ import { BlockComponentProps } from '../../types/editorTypes';
 
 export const HeadingBlock = ({ block, index }: BlockComponentProps) => {
   const { updateBlock, setActiveBlockId } = useEditor();
+  console.log(index);
+  
 
   return (
     <h2
