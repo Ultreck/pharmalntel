@@ -1,9 +1,10 @@
-// src/components/blocks/ParagraphBlock.tsx
 import { useEditor } from '../../context/EditorContext';
 import { BlockComponentProps } from '../../types/editorTypes';
 
 export const ParagraphBlock = ({ block, index }: BlockComponentProps) => {
   const { updateBlock, setActiveBlockId } = useEditor();
+  console.log(index);
+  
 
   return (
     <p
