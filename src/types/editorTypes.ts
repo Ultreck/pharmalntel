@@ -7,6 +7,7 @@ export interface Block {
 
 export type BlockType = 'heading' | 'paragraph' | 'image' | 'video';
 
+// In your editorTypes.ts
 export interface EditorContextType {
   blocks: Block[];
   addBlock: (type: BlockType, index: number) => void;
@@ -14,7 +15,7 @@ export interface EditorContextType {
   deleteBlock: (id: string) => void;
   activeBlockId: string | null;
   setActiveBlockId: (id: string | null) => void;
-  moveBlock: (dragIndex: number, hoverIndex: number) => void;
+  moveBlock: (fromIndex: number, toIndex: number) => void; // Add this line
 }
 
 export interface BlockComponentProps {
