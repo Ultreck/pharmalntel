@@ -1,4 +1,3 @@
-// src/components/blocks/HeadingBlock.tsx
 import { useEditor } from '../../context/EditorContext';
 import { BlockComponentProps } from '../../types/editorTypes';
 
