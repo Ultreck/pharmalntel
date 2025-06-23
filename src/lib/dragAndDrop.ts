@@ -1,30 +1,32 @@
-// src/lib/dragAndDrop.js
-import { useCallback } from 'react';
+import { useState } from 'react';
 import { useEditor } from '../context/EditorContext';
+import { DndContext, DragOverlay, closestCenter } from '@dnd-kit/core';
+import { arrayMove } from '@dnd-kit/sortable';
 
 export const useDragAndDrop = () => {
-  const { blocks, setBlocks } = useEditor();
-console.log(blocks);
+  const { blocks, moveBlock } = useEditor();
+  const [activeId, setActiveId] = useState<string | null>(null);
 
-interface Block {
-    // Define the properties of a block as needed, for example:
-    id: string;
-    [key: string]: any;
-}
+  const handleDragStart = (index: number) => {
+    setActiveId(blocks[index].id);
+  };
 
-interface MoveBlock {
-    (dragIndex: number, hoverIndex: number): void;
-}
+  const handleDragEnd = () => {
+    setActiveId(null);
+  };
 
-const moveBlock: MoveBlock = useCallback((dragIndex: number, hoverIndex: number) => {
-    setBlocks((prevBlocks: Block[]) => {
-        const draggedBlock = prevBlocks[dragIndex];
-        const updatedBlocks = [...prevBlocks];
-        updatedBlocks.splice(dragIndex, 1);
-        updatedBlocks.splice(hoverIndex, 0, draggedBlock);
-        return updatedBlocks;
-    });
-}, [setBlocks]);
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>, index: number) => {
+    event.preventDefault();
+    const activeIndex = blocks.findIndex(block => block.id === activeId);
+    if (activeIndex !== -1 && activeIndex !== index) {
+      moveBlock(activeIndex, index);
+    }
+  };
 
-  return { moveBlock };
+  return {
+    sensors: DndContext.sensors,
+    handleDragStart,
+    handleDragEnd,
+    handleDragOver
+  };
 };
