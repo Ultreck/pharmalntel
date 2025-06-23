@@ -2,10 +2,9 @@ import { useState } from 'react';
 import { useEditor } from '../../context/EditorContext';
 import { BlockComponentProps } from '../../types/editorTypes';
 
-export const ImageBlock = ({ block, index }: BlockComponentProps) => {
+export const ImageBlock = ({ block }: BlockComponentProps) => {
   const { updateBlock, setActiveBlockId } = useEditor();
   const [isEditing, setIsEditing] = useState(false);
-console.log(index);
 
   return (
     <div className="mb-4" onFocus={() => setActiveBlockId(block.id)}>
