@@ -8,6 +8,8 @@ export const VideoBlock = memo(({ block }: BlockComponentProps) => {
   const updateBlock = useEditorSelector((state) => state.updateBlock);
   const setActiveBlockId = useEditorSelector((state) => state.setActiveBlockId);
   const [isEditing, setIsEditing] = useState(true);
+//   const [video, setVideo] = useState();
+//   const [caption, setCaption] = useState();
 
   //   const handleSetIsEditing = useCallback(() => {
   //     setIsEditing(true);
@@ -27,6 +29,7 @@ export const VideoBlock = memo(({ block }: BlockComponentProps) => {
 
   const handleUpdateUrl = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
+        // setVideo(e.target.value);
       if (e.target.value) {
         updateBlock(block.id, {
           data: { ...block.data, url: e.target.value },
@@ -60,8 +63,8 @@ export const VideoBlock = memo(({ block }: BlockComponentProps) => {
           <div className="aspect-video bg-black">
             <ReactPlayer
               url={block.data.url}
-              width="100%"
-              height="100%"
+              width="90%"
+              height="90%"
               controls
               onClick={toggleEditing}
             />

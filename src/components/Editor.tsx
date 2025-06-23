@@ -10,6 +10,7 @@ import { useDragAndDrop } from '../hooks/useDragAndDrop';
 import { DndContext, DragOverlay } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { SortableBlock } from './blocks/SortableBlock';
+import { useCallback } from 'react';
 
 interface BlockComponentProps {
   block: Block;
@@ -27,22 +28,23 @@ export const Editor = () => {
     closestCenter,
   } = useDragAndDrop();
 
-  const renderBlock = (block: Block, index: number) => {
-    const props: BlockComponentProps = { block, index };
-    
-    switch (block.type) {
-      case 'heading':
-        return <HeadingBlock key={block.id} {...props} />;
-      case 'paragraph':
-        return <ParagraphBlock key={block.id} {...props} />;
-      case 'image':
-        return <ImageBlock key={block.id} {...props} />;
-      case 'video':
-        return <VideoBlock key={block.id} {...props} />;
-      default:
-        return <ParagraphBlock key={block.id} {...props} />;
-    }
-  };
+const renderBlock = useCallback((block: Block, index: number) => {
+  const props: BlockComponentProps = { block, index };
+
+  switch (block.type) {
+    case 'heading':
+      return <HeadingBlock key={block.id} {...props} />;
+    case 'paragraph':
+      return <ParagraphBlock key={block.id} {...props} />;
+    case 'image':
+      return <ImageBlock key={block.id} {...props} />;
+    case 'video':
+      return <VideoBlock key={block.id} {...props} />;
+    default:
+      return <ParagraphBlock key={block.id} {...props} />;
+  }
+}, []);
+
 
   return (
     <DndContext
